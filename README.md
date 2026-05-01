@@ -22,7 +22,7 @@
 * Spring Data JPA
 * H2 Database
 * JUnit5
-* 
+
 ---
 
 ## 3. 시스템 설계
@@ -49,44 +49,56 @@
 
 ### 3.3 테이블 구조
 
+## ERD
+
+```mermaid
+erDiagram
+    TB_POINT_WALLET {
+        string MEMBER_ID PK
+        long BALANCE
+    }
+
+    TB_POINT_EARN {
+        string EARN_ID PK
+        string MEMBER_ID FK
+        long AMOUNT
+        long REMAINING_AMOUNT
+        string EARN_TYPE
+        string STATUS
+        date EXPIRED_AT
+        datetime REGISTERED_AT
+    }
+
+    TB_POINT_USE {
+        string USE_ID PK
+        string MEMBER_ID FK
+        string ORDER_NUMBER
+        long USE_AMOUNT
+        long CANCEL_AMOUNT
+        string STATUS
+        datetime REGISTERED_AT
+    }
+
+    TB_POINT_USE_DETAIL {
+        long DETAIL_ID PK
+        string USE_ID FK
+        string EARN_ID FK
+        long USE_AMOUNT
+        long CANCEL_AMOUNT
+    }
+
+    TB_POINT_POLICY {
+        long POLICY_ID PK
+        string MEMBER_ID
+        long MAX_EARN_AMOUNT
+        long MAX_BALANCE_AMOUNT
+    }
+
+    TB_POINT_WALLET ||--o{ TB_POINT_EARN : "memberId"
+    TB_POINT_WALLET ||--o{ TB_POINT_USE : "memberId"
+    TB_POINT_USE ||--o{ TB_POINT_USE_DETAIL : "useId"
+    TB_POINT_EARN ||--o{ TB_POINT_USE_DETAIL : "earnId"
 ```
-[TB_POINT_POLICY]
-- POLICY_ID (PK)
-- MEMBER_ID
-- MAX_EARN_AMOUNT
-- MAX_BALANCE_AMOUNT
-
-[TB_POINT_WALLET]
-- MEMBER_ID (PK)
-- BALANCE
-
-[TB_POINT_EARN]
-- EARN_ID (PK)
-- MEMBER_ID
-- AMOUNT
-- REMAINING_AMOUNT
-- EARN_TYPE (MANUAL / EVENT / USE_CANCEL)
-- STATUS (EARNED / CANCELED)
-- EXPIRED_AT
-- REGISTERED_AT
-
-[TB_POINT_USE]
-- USE_ID (PK)
-- MEMBER_ID
-- ORDER_NUMBER
-- USE_AMOUNT
-- CANCEL_AMOUNT
-- STATUS (USED / PARTIAL_CANCELED / CANCELED)
-- REGISTERED_AT
-
-[TB_POINT_USE_DETAIL]
-- DETAIL_ID (PK)
-- USE_ID
-- EARN_ID
-- USE_AMOUNT
-- CANCEL_AMOUNT
-```
-
 ---
 
 ## 4. API 명세
