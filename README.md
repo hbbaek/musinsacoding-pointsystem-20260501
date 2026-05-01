@@ -192,7 +192,7 @@ Request:
 
 ```json
 {
-  "earnId": "earn1",
+  "earnId": "생성된 적립 ID",
   "memberId": "member1",
   "amount": 1000
 }
@@ -242,7 +242,7 @@ Request:
 
 ```json
 {
-  "useId": "use1",
+  "useId": "생성된 사용 ID",
   "memberId": "member1",
   "amount": 500
 }
@@ -325,17 +325,63 @@ cd point
 ./gradlew bootRun
 ```
 
-### 테스트
+### 단위 테스트
 
 ```bash
 cd point
 ./gradlew test
 ```
 
----
+### API 호출 테스트 (curl)
+* 서버 실행 후 아래 curl 명령어로 바로 테스트할 수 있습니다. 
+* 기본 포인트 정책은 서버 실행 시 `data.sql`을 통해 자동으로 등록되며, 별도의 사전 데이터 설정 없이 바로 API 호출이 가능합니다.
+
+##### 1) 포인트 적립
+```bash
+curl -X POST http://localhost:8080/api/point/earn \
+  -H "Content-Type: application/json" \
+  -d '{
+    "memberId": "member1",
+    "amount": 1000,
+    "earnType": "EVENT"
+  }'
+```
+
+#### 2) 포인트 적립 취소
+```bash
+curl -X POST http://localhost:8080/api/point/earn/cancel \
+  -H "Content-Type: application/json" \
+  -d '{
+    "earnId": "포인트 적립 응답 정보 (earnId)",
+    "memberId": "member1"
+    "amount": 1000
+  }'
+```
+
+#### 3) 포인트 사용
+```bash
+curl -X POST http://localhost:8080/api/point/use \
+  -H "Content-Type: application/json" \
+  -d '{
+    "memberId": "member1",
+    "orderNumber": "ORDER-001",
+    "amount": 500
+  }'
+```
+
+#### 4) 포인트 사용 취소
+```bash
+curl -X POST http://localhost:8080/api/point/use/cancel \
+  -H "Content-Type: application/json" \
+  -d '{
+    "memberId": "member1",
+    "useId": "포인트 사용 응답 정보 (useId)",
+    "amount": 200
+  }'
+```
 
 ## 8. H2 Console
-
+* 서버 실행 후 아래 주소로 접속하여 데이터 확인이 가능합니다.
 ```
 http://localhost:8080/h2-console
 ```
