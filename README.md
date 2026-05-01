@@ -49,6 +49,44 @@
 
 ### 3.3 테이블 구조
 
+```text
+[TB_POINT_WALLET]
+- MEMBER_ID (PK) : 회원 ID
+- BALANCE : 현재 보유 포인트
+
+[TB_POINT_EARN]
+- EARN_ID (PK) : 적립 ID
+- MEMBER_ID : 회원 ID
+- AMOUNT : 적립 금액
+- EARN_TYPE : 적립 유형 (MANUAL / EVENT / USE_CANCEL)
+- STATUS : 적립 상태 (EARNED / CANCELED)
+- REMAINING_AMOUNT : 잔여 포인트
+- EXPIRED_AT : 만료일
+- REGISTERED_AT : 등록일
+
+[TB_POINT_USE]
+- USE_ID (PK) : 사용 ID
+- MEMBER_ID : 회원 ID
+- ORDER_NUMBER : 주문번호
+- USE_AMOUNT : 사용 포인트
+- CANCEL_AMOUNT : 취소된 포인트
+- STATUS : 사용 상태 (USED / PARTIAL_CANCELED / CANCELED)
+- REGISTERED_AT : 등록일
+
+[TB_POINT_USE_DETAIL]
+- DETAIL_ID (PK) : 사용 상세 ID
+- USE_ID : 사용 ID
+- EARN_ID : 적립 ID
+- USE_AMOUNT : 해당 적립 건에서 사용한 포인트
+- CANCEL_AMOUNT : 해당 상세 건에서 취소된 포인트
+
+[TB_POINT_POLICY]
+- POLICY_ID (PK) : 정책 ID
+- MEMBER_ID : 회원 ID
+- MAX_EARN_AMOUNT : 1회 최대 적립 가능 포인트
+- MAX_BALANCE_AMOUNT : 최대 보유 가능 포인트
+```
+
 ## ERD
 
 ```mermaid
@@ -257,7 +295,7 @@ HTTP 200 OK
 * 기존 적립 포인트가 만료되지 않은 경우 기존 적립 원장의 잔여 금액을 복구합니다.  
 * 기존 적립 포인트가 만료된 경우 `USE_CANCEL` 유형의 신규 적립 포인트를 생성합니다.  
 * 전체 취소 시 상태를 `CANCELED`, 일부 취소 시 상태를 `PARTIAL_CANCELED`로 변경합니다.
-* 
+
 ---
 
 ## 6. 테스트
@@ -305,8 +343,4 @@ http://localhost:8080/h2-console
 JDBC URL: jdbc:h2:file:./data/pointdb
 User: sa
 Password:
-```
-
-
-```
 ```
