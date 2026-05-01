@@ -341,7 +341,7 @@ http://localhost:8080/h2-console
 ```
 
 ```
-JDBC URL: jdbc:h2:file:./data/pointdb
+JDBC URL: jdbc:h2:mem:pointdb
 User: sa
 Password:
 ```
