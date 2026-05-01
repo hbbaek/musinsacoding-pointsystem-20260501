@@ -50,13 +50,20 @@
 ### 3.3 테이블 구조
 
 ```text
+
+[TB_POINT_POLICY]
+- POLICY_ID (PK) : 정책 ID
+- MEMBER_ID (FK -> TB_POINT_WALLET.MEMBER_ID, Nullable) : 회원 ID
+- MAX_EARN_AMOUNT : 1회 최대 적립 가능 포인트
+- MAX_BALANCE_AMOUNT : 최대 보유 가능 포인트
+
 [TB_POINT_WALLET]
 - MEMBER_ID (PK) : 회원 ID
 - BALANCE : 현재 보유 포인트
 
 [TB_POINT_EARN]
 - EARN_ID (PK) : 적립 ID
-- MEMBER_ID : 회원 ID
+- MEMBER_ID (FK -> TB_POINT_WALLET.MEMBER_ID) : 회원 ID
 - AMOUNT : 적립 금액
 - EARN_TYPE : 적립 유형 (MANUAL / EVENT / USE_CANCEL)
 - STATUS : 적립 상태 (EARNED / CANCELED)
@@ -66,7 +73,7 @@
 
 [TB_POINT_USE]
 - USE_ID (PK) : 사용 ID
-- MEMBER_ID : 회원 ID
+- MEMBER_ID (FK -> TB_POINT_WALLET.MEMBER_ID) : 회원 ID
 - ORDER_NUMBER : 주문번호
 - USE_AMOUNT : 사용 포인트
 - CANCEL_AMOUNT : 취소된 포인트
@@ -75,22 +82,23 @@
 
 [TB_POINT_USE_DETAIL]
 - DETAIL_ID (PK) : 사용 상세 ID
-- USE_ID : 사용 ID
-- EARN_ID : 적립 ID
+- USE_ID (FK -> TB_POINT_USE.USE_ID) : 사용 ID
+- EARN_ID (FK -> TB_POINT_EARN.EARN_ID) : 적립 ID
 - USE_AMOUNT : 해당 적립 건에서 사용한 포인트
 - CANCEL_AMOUNT : 해당 상세 건에서 취소된 포인트
-
-[TB_POINT_POLICY]
-- POLICY_ID (PK) : 정책 ID
-- MEMBER_ID : 회원 ID
-- MAX_EARN_AMOUNT : 1회 최대 적립 가능 포인트
-- MAX_BALANCE_AMOUNT : 최대 보유 가능 포인트
 ```
 
 ## ERD
 
 ```mermaid
 erDiagram
+    TB_POINT_POLICY {
+        long POLICY_ID PK
+        string MEMBER_ID
+        long MAX_EARN_AMOUNT
+        long MAX_BALANCE_AMOUNT
+    }
+
     TB_POINT_WALLET {
         string MEMBER_ID PK
         long BALANCE
@@ -123,13 +131,6 @@ erDiagram
         string EARN_ID FK
         long USE_AMOUNT
         long CANCEL_AMOUNT
-    }
-
-    TB_POINT_POLICY {
-        long POLICY_ID PK
-        string MEMBER_ID
-        long MAX_EARN_AMOUNT
-        long MAX_BALANCE_AMOUNT
     }
 
     TB_POINT_WALLET ||--o{ TB_POINT_EARN : "memberId"
